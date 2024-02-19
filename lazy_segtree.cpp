@@ -228,6 +228,12 @@ auto main() -> int {
 
 	int N, Q; cin >> N >> Q;
 	auto seg = get_lazy_segment_tree(N, f, g, h, ti, ei);
+	/*
+	for (int i = 0; i < N; i++) {
+		modint ai; cin >> ai;
+		seg.set(i, {ai, 0, 0, 0});
+	}
+	 */
 	while (Q--) {
 		int t, l, r; cin >> t >> l >> r;
 		if (t == 1) {

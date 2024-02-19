@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <ranges>
 using namespace std;
 
 constexpr int mod = 998244353;
