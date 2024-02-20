@@ -239,8 +239,8 @@ auto main() -> int {
 		if (t == 1) {
 			modint k; cin >> k;
 			seg.apply(l, r, Mat4{
-				Vec4{1, 0, 0, 0},
-				Vec4{modint(2) * k, 1, 0, 0},
+				Vec4{1, modint(2) * k, 0, 0},
+				Vec4{0, 1, 0, 0},
 				Vec4{0, 0, 1, 0}, 
 				Vec4{k * k, k, 0, 1}
 			});

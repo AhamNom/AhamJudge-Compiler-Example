@@ -7,7 +7,7 @@ constexpr int mod = 998244353;
 
 auto main() -> int {
 	int n, q; std::cin >> n >> q;
-	std::vector a(n, modint(0)), hist_square_sum(n, modint(0));
+	std::vector<modint> a(n, modint(0)), hist_square_sum(n, modint(0));
 	while (q--) {
 		int t, l, r; cin >> t >> l >> r;
 		if (t == 1) {
