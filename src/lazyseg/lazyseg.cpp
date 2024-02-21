@@ -2,7 +2,7 @@
 using namespace std;
 
 constexpr int mod = 998244353;
-#include "modint.hpp"
+#include "../../include/modint.hpp"
 
 /**
  * @brief Lazy-Segment-Tree(遅延伝搬セグメント木)
@@ -203,14 +203,15 @@ auto main() -> int {
 		res[3] = a[3] + b[3];
 		return res;
 	};
-	auto g = [](Vec4 a, Mat4 b) -> Vec4 {
-		Vec4 res;
-		res[0] = b[0][0] * a[0] + b[0][1] * a[1] + b[0][2] * a[2] + b[0][3] * a[3];
-		res[1] = b[1][0] * a[0] + b[1][1] * a[1] + b[1][2] * a[2] + b[1][3] * a[3];
-		res[2] = b[2][0] * a[0] + b[2][1] * a[1] + b[2][2] * a[2] + b[2][3] * a[3];
-		res[3] = b[3][0] * a[0] + b[3][1] * a[1] + b[3][2] * a[2] + b[3][3] * a[3];
-		return res;
-	};
+  auto g = [](Vec4 a, Mat4 b) -> Vec4 {
+      Vec4 res = {0, 0, 0, 0}; // 初始化结果向量
+      for (int i = 0; i < 4; i++) { // 对于结果向量的每一个元素
+          for (int j = 0; j < 4; j++) { // 进行点乘操作
+              res[i] += a[j] * b[j][i]; // 累加到对应的结果元素上
+          }
+      }
+      return res;
+  };
 	auto h = [](Mat4 a, Mat4 b) -> Mat4 {
 		Mat4 res;
 		for(int i = 0; i < 4; i++) {
@@ -228,28 +229,41 @@ auto main() -> int {
 
 	int N, Q; cin >> N >> Q;
 	auto seg = get_lazy_segment_tree(N, f, g, h, ti, ei);
-	/*
-	for (int i = 0; i < N; i++) {
-		modint ai; cin >> ai;
-		seg.set(i, {ai, 0, 0, 0});
-	}
-	 */
+  for (int i = 0; i < N; i++) seg.set(i, Vec4{0, 0, 0, 1});
+	
+  auto print = [&] {
+    for (int i = 0; i < N; i++) {
+      for (auto e : seg[i]) cout << e << " "; cout << endl;
+    }
+    cout << endl;
+  };
+  print();
 	while (Q--) {
 		int t, l, r; cin >> t >> l >> r;
 		if (t == 1) {
 			modint k; cin >> k;
+      cout << "applying: " << l << " " << r << " " << k << endl;
+      // seg.apply(l, r, Mat4{
+      //   Vec4{1, 0, 0, 0},
+      //   Vec4{0, 1, 0, 0},
+      //   Vec4{0, 0, 1, 0},
+      //   Vec4{0, 0, 0, 1}
+      // });
+      // continue;
 			seg.apply(l, r, Mat4{
 				Vec4{1, modint(2) * k, 0, 0},
 				Vec4{0, 1, 0, 0},
 				Vec4{0, 0, 1, 0}, 
-				Vec4{k * k, k, 0, 1}
+				Vec4{k, k * k, 0, 1}
 			});
+      print();
 			seg.apply(0, N, Mat4{
 				Vec4{1, 0, 0, 0},
 				Vec4{0, 1, 1, 0},
 				Vec4{0, 0, 1, 0},
 				Vec4{0, 0, 0, 1}
 			});
+      print();
 		} else {
 			auto res = seg.prod(l, r);
 			cout << res[0] << " " << res[2] << endl;
