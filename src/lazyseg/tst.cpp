@@ -193,8 +193,8 @@ LazySegmentTree< T, E, F, G, H > get_lazy_segment_tree
 }
 
 auto main() -> int {
-	using Vec4 = array<modint, 4>;
-	using Mat4 = array<modint, 6>;
+	using Vec4 = array<modint, 4>; // (val, val^2, sum_in_history(val^2), 1)
+	using Mat4 = array<Vec4, 4>;
 	auto f = [](Vec4 a, Vec4 b) -> Vec4 {
 		Vec4 res;
 		res[0] = a[0] + b[0];
@@ -203,44 +203,60 @@ auto main() -> int {
 		res[3] = a[3] + b[3];
 		return res;
 	};
-  auto g = [](Vec4 v, Mat4 m) -> Vec4 {
-    auto &x = v[0], y = v[1], z = v[2];
-    auto &a = m[0], &b = m[1], &c = m[2], &d = m[3], &e = m[4], &f = m[5];
-    return Vec4{x + a * y + b * z, y + c * z, z, d * x + e * y + f * z + modint(1)};
-  };
-	auto h = [](Mat4 a, Mat4 b) -> Mat4 {
-    auto &a1 = a[0], &b1 = a[1], &c1 = a[2], &d1 = a[3], &e1 = a[4], &f1 = a[5];
-    auto &a2 = b[0], &b2 = b[1], &c2 = b[2], &d2 = b[3], &e2 = b[4], &f2 = b[5];
-		return Mat4 {a1 + a2, a1 * c1 + b1 + b2, c1 + c2, d1 + d2, a2 * d1 + e1 + e2, b2 * d1 + c2 * e1 + f1 + f2};
+	auto g = [](Vec4 a, Mat4 b) -> Vec4 {
+		Vec4 res;
+    for (int i = 0; i < 4; i++) { // 对于结果向量的每一个元素
+        for (int j = 0; j < 4; j++) { // 进行点乘操作
+            res[i] += a[j] * b[j][i]; // 累加到对应的结果元素上
+        }
+    }
+		return res;
 	};
-	auto ti = Vec4{0, 0, 0, 0};
-	auto ei = Mat4{0, 0, 0, 0, 0, 0};
-
-	int N, Q; cin >> N >> Q;
-	auto seg = get_lazy_segment_tree(N, f, g, h, ti, ei);
-  for (int i = 0; i < N; i++) seg.set(i, Vec4{0, 0, 0, 1});
-	
-	while (Q--) {
-		int t, l, r; cin >> t >> l >> r;
-		if (t == 1) {
-			modint k; cin >> k;
-			seg.apply(l, r, Mat4{
-        modint(2) * k, 0, 0, k, k * k, 0
-				// Vec4{1, modint(2) * k, 0, 0},
-				// Vec4{0, 1, 0, 0},
-				// Vec4{0, 0, 1, 0}, 
-				// Vec4{k, k * k, 0, 1}
-			});
-			seg.apply(0, N, Mat4{
-        0, 0, 1, 0, 0, 0
-				// Vec4{1, 0, 0, 0},
-				// Vec4{0, 1, 1, 0},
-				// Vec4{0, 0, 1, 0},
-				// Vec4{0, 0, 0, 1}
-			});
-		} else {
-			auto res = seg.prod(l, r);
-			cout << res[0] << " " << res[2] << endl;
+	auto h = [](Mat4 a, Mat4 b) -> Mat4 {
+		Mat4 res;
+		for(int i = 0; i < 4; i++) {
+			for(int j = 0; j < 4; j++) {
+				res[i][j] = 0;
+				for(int k = 0; k < 4; k++) {
+					res[i][j] += a[i][k] * b[k][j];
+				}
+			}
 		}
-	}
+		return res;
+	};
+	auto ti = Vec4{0, 0, 0, 1};
+	auto ei = Mat4{Vec4{1, 0, 0, 0}, Vec4{0, 1, 0, 0}, Vec4{0, 0, 1, 0}, Vec4{0, 0, 0, 1}};
+
+  auto a =
+  Mat4{
+    Vec4{1, modint(2) * k, 0, 0},
+    Vec4{0, 1, 0, 0},
+    Vec4{0, 0, 1, 0}, 
+    Vec4{k, k * k, 0, 1}
+  };
+  auto b = h(a, a);
+  for (auto i : b) { for (auto j : i) cout << j << " "; cout << endl; } cout << endl;
+  return 0;
+
+  int N = 10;
+	auto seg = get_lazy_segment_tree(N, f, g, h, ti, ei);
+  auto print = [&] {
+    for (int i = 0; i < N; i++) {
+      for (auto e : seg[i]) cout << e << " "; cout << endl;
+    }
+    cout << endl;
+  };
+  print();
+
+  modint k = 2; seg.apply(0, 3, Mat4{Vec4{1, modint(2) * k, 0, 0}, Vec4{0, 1, 0, 0}, Vec4{0, 0, 1, 0}, Vec4{k, k * k, 0, 1}});
+  print();
+
+  seg.apply(0, 5, Mat4{ Vec4{2, 0, 0, 0}, Vec4{0, 2, 0, 0}, Vec4{0, 0, 2, 0}, Vec4{0, 0, 0, 2} });
+  print();
+
+  Vec4 v = {0, 0, 0, 1};
+  k = 2; v = g(v, Mat4{Vec4{1, modint(2) * k, 0, 0}, Vec4{0, 1, 0, 0}, Vec4{0, 0, 1, 0}, Vec4{k, k * k, 0, 1}});
+  for (auto e : v) cout << e << " "; cout << endl;
+  v = g(v, Mat4{ Vec4{2, 0, 0, 0}, Vec4{0, 2, 0, 0}, Vec4{0, 0, 2, 0}, Vec4{0, 0, 0, 2} });
+  for (auto e : v) cout << e << " "; cout << endl;
 }

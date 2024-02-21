@@ -231,39 +231,22 @@ auto main() -> int {
 	auto seg = get_lazy_segment_tree(N, f, g, h, ti, ei);
   for (int i = 0; i < N; i++) seg.set(i, Vec4{0, 0, 0, 1});
 	
-  auto print = [&] {
-    for (int i = 0; i < N; i++) {
-      for (auto e : seg[i]) cout << e << " "; cout << endl;
-    }
-    cout << endl;
-  };
-  print();
 	while (Q--) {
 		int t, l, r; cin >> t >> l >> r;
 		if (t == 1) {
 			modint k; cin >> k;
-      cout << "applying: " << l << " " << r << " " << k << endl;
-      // seg.apply(l, r, Mat4{
-      //   Vec4{1, 0, 0, 0},
-      //   Vec4{0, 1, 0, 0},
-      //   Vec4{0, 0, 1, 0},
-      //   Vec4{0, 0, 0, 1}
-      // });
-      // continue;
 			seg.apply(l, r, Mat4{
 				Vec4{1, modint(2) * k, 0, 0},
 				Vec4{0, 1, 0, 0},
 				Vec4{0, 0, 1, 0}, 
 				Vec4{k, k * k, 0, 1}
 			});
-      print();
 			seg.apply(0, N, Mat4{
 				Vec4{1, 0, 0, 0},
 				Vec4{0, 1, 1, 0},
 				Vec4{0, 0, 1, 0},
 				Vec4{0, 0, 0, 1}
 			});
-      print();
 		} else {
 			auto res = seg.prod(l, r);
 			cout << res[0] << " " << res[2] << endl;

@@ -5,5 +5,6 @@ constexpr int mod = 998244353;
 #include "../../include/modint.hpp"
 
 auto main() -> int {
-
+	int n, k; cin >> n >> k;
+	cout << stirling(n, k) << endl;
 }
