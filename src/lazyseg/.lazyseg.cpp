@@ -206,12 +206,12 @@ auto main() -> int {
   auto g = [](Vec4 v, Mat4 m) -> Vec4 {
     auto &x = v[0], y = v[1], z = v[2];
     auto &a = m[0], &b = m[1], &c = m[2], &d = m[3], &e = m[4], &f = m[5];
-    return Vec4{x + a * y + b * z, y + c * z, z, d * x + e * y + f * z + modint(1)};
+    return Vec4{d + x, a * x + e + y, b * x + c * y + f + z, 1};
   };
 	auto h = [](Mat4 a, Mat4 b) -> Mat4 {
     auto &a1 = a[0], &b1 = a[1], &c1 = a[2], &d1 = a[3], &e1 = a[4], &f1 = a[5];
     auto &a2 = b[0], &b2 = b[1], &c2 = b[2], &d2 = b[3], &e2 = b[4], &f2 = b[5];
-		return Mat4 {a1 + a2, a1 * c1 + b1 + b2, c1 + c2, d1 + d2, a2 * d1 + e1 + e2, b2 * d1 + c2 * e1 + f1 + f2};
+		return Mat4 {a1 + a2, a1 * c2 + b1 + b2, c1 + c2, d1 + d2, a2 * d1 + e1 + e2, b2 * d1 + c2 * e1 + f1 + f2};
 	};
 	auto ti = Vec4{0, 0, 0, 0};
 	auto ei = Mat4{0, 0, 0, 0, 0, 0};
@@ -224,6 +224,8 @@ auto main() -> int {
 		int t, l, r; cin >> t >> l >> r;
 		if (t == 1) {
 			modint k; cin >> k;
+      // cout << l << " " << r << " " << k << endl;
+
 			seg.apply(l, r, Mat4{
         modint(2) * k, 0, 0, k, k * k, 0
 				// Vec4{1, modint(2) * k, 0, 0},
@@ -231,6 +233,18 @@ auto main() -> int {
 				// Vec4{0, 0, 1, 0}, 
 				// Vec4{k, k * k, 0, 1}
 			});
+
+      cout << endl;
+      auto v = g({0, 0, 0, 1}, {modint(2) * k, 0, 0, k, k * k, 0});
+      for (auto e : v) cout << e << " "; cout << endl;
+      cout << endl;
+
+      for (int i = 0; i < N; i++) {
+        for (auto e : seg[i]) cout << e << " ";
+        cout << endl;
+      }
+      cout << endl;
+
 			seg.apply(0, N, Mat4{
         0, 0, 1, 0, 0, 0
 				// Vec4{1, 0, 0, 0},
@@ -238,6 +252,13 @@ auto main() -> int {
 				// Vec4{0, 0, 1, 0},
 				// Vec4{0, 0, 0, 1}
 			});
+
+      for (int i = 0; i < N; i++) {
+        for (auto e : seg[i]) cout << e << " ";
+        cout << endl;
+      }
+      cout << endl;
+
 		} else {
 			auto res = seg.prod(l, r);
 			cout << res[0] << " " << res[2] << endl;

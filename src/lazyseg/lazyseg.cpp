@@ -241,12 +241,23 @@ auto main() -> int {
 				Vec4{0, 0, 1, 0}, 
 				Vec4{k, k * k, 0, 1}
 			});
+      cout << endl;
+      for (int i = 0; i < N; i++) {
+        for (auto e : seg[i]) cout << e << " ";
+        cout << endl;
+      }
+      cout << endl;
 			seg.apply(0, N, Mat4{
 				Vec4{1, 0, 0, 0},
 				Vec4{0, 1, 1, 0},
 				Vec4{0, 0, 1, 0},
 				Vec4{0, 0, 0, 1}
 			});
+      for (int i = 0; i < N; i++) {
+        for (auto e : seg[i]) cout << e << " ";
+        cout << endl;
+      }
+      cout << endl;
 		} else {
 			auto res = seg.prod(l, r);
 			cout << res[0] << " " << res[2] << endl;

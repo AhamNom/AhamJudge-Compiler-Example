@@ -2,11 +2,12 @@
 using namespace std;
 
 auto main(int argc, char *argv[]) -> int {
-    int n = 100000, q = 100000;
+    int n = 10, q = 20;
     if (argc >= 2) n = atoi(argv[1]);
     if (argc >= 3) q = atoi(argv[2]);
     cout << n << " " << q << endl;
-    mt19937_64 mt(45218965);
+    // mt19937_64 mt(45218965);
+    mt19937_64 mt(114514);
     for (int i = 0; i < q; i++) {
         int t = mt() % 2 + 1;
         if (t == 1) {
