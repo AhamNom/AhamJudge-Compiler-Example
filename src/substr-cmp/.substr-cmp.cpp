@@ -6,7 +6,8 @@ constexpr int mod = 998244353;
 
 auto main() -> int {
 	// string s; int q; cin >> s >> q;
-	vector<uint8_t> s(1e5);
+	int n; cin >> n;
+	vector<uint8_t> s(n / 2 + 3);
 
 	int i = 0;
 	while (true) {

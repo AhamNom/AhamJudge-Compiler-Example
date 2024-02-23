@@ -1,6 +1,7 @@
 import sys
 import random
 
+print(sys.argv[1])
 for _ in range(2 * int(sys.argv[1])):
     print(random.randint(0, 9), end='')
 print(' ', end='')

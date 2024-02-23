@@ -224,41 +224,8 @@ auto main() -> int {
 		int t, l, r; cin >> t >> l >> r;
 		if (t == 1) {
 			modint k; cin >> k;
-      // cout << l << " " << r << " " << k << endl;
-
-			seg.apply(l, r, Mat4{
-        modint(2) * k, 0, 0, k, k * k, 0
-				// Vec4{1, modint(2) * k, 0, 0},
-				// Vec4{0, 1, 0, 0},
-				// Vec4{0, 0, 1, 0}, 
-				// Vec4{k, k * k, 0, 1}
-			});
-
-      cout << endl;
-      auto v = g({0, 0, 0, 1}, {modint(2) * k, 0, 0, k, k * k, 0});
-      for (auto e : v) cout << e << " "; cout << endl;
-      cout << endl;
-
-      for (int i = 0; i < N; i++) {
-        for (auto e : seg[i]) cout << e << " ";
-        cout << endl;
-      }
-      cout << endl;
-
-			seg.apply(0, N, Mat4{
-        0, 0, 1, 0, 0, 0
-				// Vec4{1, 0, 0, 0},
-				// Vec4{0, 1, 1, 0},
-				// Vec4{0, 0, 1, 0},
-				// Vec4{0, 0, 0, 1}
-			});
-
-      for (int i = 0; i < N; i++) {
-        for (auto e : seg[i]) cout << e << " ";
-        cout << endl;
-      }
-      cout << endl;
-
+			seg.apply(l, r, Mat4{ modint(2) * k, 0, 0, k, k * k, 0 });
+			seg.apply(0, N, Mat4{ 0, 0, 1, 0, 0, 0 });
 		} else {
 			auto res = seg.prod(l, r);
 			cout << res[0] << " " << res[2] << endl;
